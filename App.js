@@ -23,7 +23,7 @@ const App = () => {
   };
 
   const checkPasswordAndNavigate = (passwordInput, navigation) => {
-    if (passwordInput === "IT") { 
+    if (passwordInput === "XQbRX8") { 
       navigation.navigate('Settings');
       toggleModal(); 
       setPassword("");

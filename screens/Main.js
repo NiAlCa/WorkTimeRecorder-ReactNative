@@ -18,12 +18,14 @@ const Main = () => {
   const [mostrarOpciones, setMostrarOpciones] = useState(false);
   const [timerId, setTimerId] = useState(null);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [showErrorMessage, setShowErrorMessage] = useState(false);
+
   const [url, setUrl] = useState("");
   const [visible, setVisible] = useState(showSuccessMessage);
   const [scanningPaused, setScanningPaused] = useState(false);
 
   const api =
-    "";
+    "here ur token api";
 
   useEffect(() => {
     (async () => {
@@ -56,6 +58,14 @@ const Main = () => {
       setShowSuccessMessage(true);
       timer = setTimeout(() => {
         setShowSuccessMessage(false);
+        setNombre("");
+      }, 1500);
+    }
+
+    if (showErrorMessage) {
+      setShowErrorMessage(true);
+      timer = setTimeout(() => {
+        setShowErrorMessage(false);
         setNombre("");
       }, 1500);
     }
@@ -125,6 +135,9 @@ const Main = () => {
     if (timerId) {
       clearTimeout(timerId);
     }
+
+    setShowErrorMessage(false);
+
     setShowSuccessMessage(false);
 
     try {
@@ -156,6 +169,8 @@ const Main = () => {
       console.error("Error data:", error.response.data);
       console.error("Error status:", error.response.status);
       console.error("Error headers:", error.response.headers);
+      setShowErrorMessage(true);
+      setScanningPaused(false);
     }
   };
 
@@ -193,6 +208,8 @@ const Main = () => {
       console.log(
         `Error", "Ocurrió un error al seleccionar la opción. ${error.message}`
       );
+      setShowErrorMessage(true);
+      setScanningPaused(false);
     }
   };
 
@@ -247,6 +264,12 @@ const Main = () => {
                 <Text style={styles.successMessageText}>
                   HAS FICHADO CON ÉXITO
                 </Text>
+              </View>
+            )}
+
+            {showErrorMessage && (
+              <View style={styles.errorMessageContainer}>
+                <Text style={styles.successMessageText}>¡Error!</Text>
               </View>
             )}
 
@@ -350,6 +373,17 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     height: "100%",
+    width: 500,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  errorMessageContainer: {
+    backgroundColor: "red",
+    padding: 10,
+    borderRadius: 5,
+    height: "110%",
     width: 500,
     display: "flex",
     justifyContent: "center",
