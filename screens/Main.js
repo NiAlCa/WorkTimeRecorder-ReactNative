@@ -24,8 +24,8 @@ const Main = () => {
   const [visible, setVisible] = useState(showSuccessMessage);
   const [scanningPaused, setScanningPaused] = useState(false);
 
-  const api =
-    "here ur token api";
+  const apiToken =
+    "";
 
   useEffect(() => {
     (async () => {
@@ -149,7 +149,7 @@ const Main = () => {
         },
         {
           headers: {
-            APIToken: api,
+            APIToken: apiToken,
             "Content-Type": "application/json",
           },
         }
@@ -187,7 +187,7 @@ const Main = () => {
         },
         {
           headers: {
-            APIToken: api,
+            APIToken: apiToken,
             "Content-Type": "application/json",
           },
         }
@@ -408,44 +408,3 @@ const styles = StyleSheet.create({
 
 export default Main;
 
-/* 
-
-
-const newTimerId = setTimeout(() => {
-          setMostrarOpciones(false);
-          setOpciones([]);
-          setNombre("");
-      }, 10000);
-      setTimerId(newTimerId); 
-
-
-
-Enviar api 
-Si finalizado devuelve false devolver las opciones
-
-{
-    "finalizado": false,
-    "opciones": [
-        "FORD FW",
-        "FORD IDC"
-    ]
-}
-
-
-las opciones deben ser botones que seteeen una variable que sea centro 
-
-{
-    "lectura": "B97336424:1000043110",
-    "idTerminal": "1",
-    "centro": variablecentro 
-}
-
-y a una vez seteada vuelva a hacer un post y aqui finalizaria, la api ya haria el fichaje en el servidor 
-
-
-
-Poner arriba de los botones un texto que indique seleccionar centro 
-
-
-
-*/
