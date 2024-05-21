@@ -19,7 +19,6 @@ const Main = () => {
   const [timerId, setTimerId] = useState(null);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showErrorMessage, setShowErrorMessage] = useState(false);
-
   const [url, setUrl] = useState("");
   const [visible, setVisible] = useState(showSuccessMessage);
   const [scanningPaused, setScanningPaused] = useState(false);
@@ -73,6 +72,7 @@ const Main = () => {
     if (opciones && opciones.length > 0) {
       timer2 = setTimeout(() => {
         setOpciones([]);
+        setNombre("");
       }, time);
     }
 
@@ -170,7 +170,7 @@ const Main = () => {
       console.error("Error status:", error.response.status);
       console.error("Error headers:", error.response.headers);
       setShowErrorMessage(true);
-      setScanningPaused(false);
+      setScanningPaused(true);
     }
   };
 
@@ -209,7 +209,7 @@ const Main = () => {
         `Error", "Ocurrió un error al seleccionar la opción. ${error.message}`
       );
       setShowErrorMessage(true);
-      setScanningPaused(false);
+      setScanningPaused(true);
     }
   };
 
@@ -220,12 +220,6 @@ const Main = () => {
     return <Text>No se ha concedido acceso a la cámara</Text>;
   }
 
-  if (hasPermission === null) {
-    return <Text>Solicitando permiso de cámara...</Text>;
-  }
-  if (hasPermission === false) {
-    return <Text>No se ha concedido acceso a la cámara</Text>;
-  }
 
   const getColorForButton = (index) => {
     const colors = ["orange"];
