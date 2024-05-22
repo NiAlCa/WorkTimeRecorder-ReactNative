@@ -22,6 +22,7 @@ const Main = () => {
   const [url, setUrl] = useState("");
   const [visible, setVisible] = useState(showSuccessMessage);
   const [scanningPaused, setScanningPaused] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const apiToken =
     "";
@@ -86,7 +87,7 @@ const Main = () => {
       clearTimeout(timer2);
       clearTimeout(timer3);
     };
-  }, [showSuccessMessage, opciones]);
+  }, [showSuccessMessage, showErrorMessage, opciones, scanningPaused, time]);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -165,11 +166,17 @@ const Main = () => {
         setShowSuccessMessage(true);
       }
     } catch (error) {
+      if (!error.response) {
+        setErrorMessage("No hay conexión a Internet.");
+      } else {
+        setErrorMessage(`Error: ${error.response.data.message || error.message}`);
+      }
       console.log(`Error", "Ocurrió un error al fichar. ${error.message}`);
-      console.error("Error data:", error.response.data);
-      console.error("Error status:", error.response.status);
-      console.error("Error headers:", error.response.headers);
+      console.error("Error data:", error.response?.data);
+      console.error("Error status:", error.response?.status);
+      console.error("Error headers:", error.response?.headers);
       setShowErrorMessage(true);
+    } finally {
       setScanningPaused(true);
     }
   };
@@ -201,14 +208,17 @@ const Main = () => {
         setNombre("");
       } else {
         console.log(
-          `Error", "No se pudo completar el fichaje.  ${error.message}`
+          `Error", "No se pudo completar el fichaje. ${response.data.message || error.message}`
         );
       }
     } catch (error) {
-      console.log(
-        `Error", "Ocurrió un error al seleccionar la opción. ${error.message}`
-      );
+      if (!error.response) {
+        setErrorMessage("No hay conexión a Internet.");
+      } else {
+        setErrorMessage(`Error: ${error.response.data.message || error.message}`);
+      }
       setShowErrorMessage(true);
+    } finally {
       setScanningPaused(true);
     }
   };
@@ -219,7 +229,6 @@ const Main = () => {
   if (hasPermission === false) {
     return <Text>No se ha concedido acceso a la cámara</Text>;
   }
-
 
   const getColorForButton = (index) => {
     const colors = ["orange"];
@@ -263,7 +272,8 @@ const Main = () => {
 
             {showErrorMessage && (
               <View style={styles.errorMessageContainer}>
-                <Text style={styles.successMessageText}>¡Error!</Text>
+                <Text style={styles.successMessageText}>¡Error!</Text>   
+                   <Text style={styles.errorMessageText}>{errorMessage}</Text>
               </View>
             )}
 
@@ -286,11 +296,11 @@ const Main = () => {
                   </TouchableOpacity>
                 ))}
 
-              {/* {opciones.length >= 1 && (
+              {opciones.length >= 1 && (
                 <TouchableOpacity style={styles.reset} onPress={handleReset}>
                   <Text style={styles.buttonText}>Salir fichaje</Text>
                 </TouchableOpacity>
-              )}*/}
+              )}
             </View>
           </View>
         </View>
@@ -401,4 +411,3 @@ const styles = StyleSheet.create({
 });
 
 export default Main;
-
