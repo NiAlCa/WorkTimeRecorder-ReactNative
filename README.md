@@ -3,7 +3,7 @@
 
 
 
-Main App - Barcode Scanning and API Integration
+ Work time recorder app and API Integration
 Overview
 This React Native application is designed to scan barcodes using the device's camera, process the scanned data, and interact with 
 a specified API to complete a check-in process. The app supports showing success and error messages, handling multiple options
