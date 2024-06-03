@@ -25,7 +25,7 @@ const Main = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const apiToken =
-    "96O/y29,98u9/?iG4sN<,kE7W=M7fc5pytGv1&f+JLOV-)a/5bUlvd~NcYfaE<Nd";
+    "";
 
   useEffect(() => {
     (async () => {
@@ -258,6 +258,10 @@ const Main = () => {
             )}
           </View>
           <View style={styles.resultContainer}>
+          {!showSuccessMessage && (
+              <Text style={styles.resultContainerText}>{`${nombre}`}</Text>
+            )}
+
             {showSuccessMessage && (
               <View style={styles.successMessageContainer}>
                 <Text style={styles.successMessageText}>
@@ -274,9 +278,7 @@ const Main = () => {
             )}
 
             <View style={styles.opcionesContainer}>
-              {opciones.length >= 1 && (
-                  <Text style={styles.resultContainerText}>{`${nombre}`}</Text>
-                ) &&
+              {opciones.length >= 1 &&
                 opciones.map((opcion, index) => (
                   <TouchableOpacity
                     key={index}
