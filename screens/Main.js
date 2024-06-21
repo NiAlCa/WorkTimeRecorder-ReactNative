@@ -80,7 +80,7 @@ const Main = () => {
     if (scanningPaused === true)
       setTimeout(() => {
         timer3 = setScanningPaused(false);
-      }, 1000);
+      }, 3000);
 
     return () => {
       clearTimeout(timer);
@@ -131,7 +131,10 @@ const Main = () => {
   };
 
   const handleBarCodeScanned = async ({ type, data }) => {
+    if (scanningPaused) return;
+
     setScanningPaused(true);
+
     setScanResult(data);
     if (timerId) {
       clearTimeout(timerId);
@@ -169,7 +172,9 @@ const Main = () => {
       if (!error.response) {
         setErrorMessage("No hay conexión a Internet.");
       } else {
-        setErrorMessage(`Error: ${error.response.data.message || error.message}`);
+        setErrorMessage(
+          `Error: ${error.response.data.message || error.message}`
+        );
       }
       console.log(`Error", "Ocurrió un error al fichar. ${error.message}`);
       console.error("Error data:", error.response?.data);
@@ -208,14 +213,18 @@ const Main = () => {
         setNombre("");
       } else {
         console.log(
-          `Error", "No se pudo completar el fichaje. ${response.data.message || error.message}`
+          `Error", "No se pudo completar el fichaje. ${
+            response.data.message || error.message
+          }`
         );
       }
     } catch (error) {
       if (!error.response) {
         setErrorMessage("No hay conexión a Internet.");
       } else {
-        setErrorMessage(`Error: ${error.response.data.message || error.message}`);
+        setErrorMessage(
+          `Error: ${error.response.data.message || error.message}`
+        );
       }
       setShowErrorMessage(true);
     } finally {
@@ -258,7 +267,7 @@ const Main = () => {
             )}
           </View>
           <View style={styles.resultContainer}>
-          {!showSuccessMessage && (
+            {!showSuccessMessage && (
               <Text style={styles.resultContainerText}>{`${nombre}`}</Text>
             )}
 
@@ -272,8 +281,8 @@ const Main = () => {
 
             {showErrorMessage && (
               <View style={styles.errorMessageContainer}>
-                <Text style={styles.successMessageText}>¡Error!</Text>   
-                   <Text style={styles.errorMessageText}>{errorMessage}</Text>
+                <Text style={styles.successMessageText}>¡Error!</Text>
+                <Text style={styles.errorMessageText}>{errorMessage}</Text>
               </View>
             )}
 
