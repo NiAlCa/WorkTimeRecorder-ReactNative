@@ -77,10 +77,10 @@ const Main = () => {
       }, time);
     }
 
-    if (scanningPaused === true)
-      setTimeout(() => {
-        timer3 = setScanningPaused(false);
-      }, 3000);
+    // if (scanningPaused === true)
+    //   setTimeout(() => {
+    //     timer3 = setScanningPaused(false);
+    //   }, 1000);
 
     return () => {
       clearTimeout(timer);
@@ -130,60 +130,61 @@ const Main = () => {
     setNombre("");
   };
 
+  let debounceTimeoutId = null;
+
   const handleBarCodeScanned = async ({ type, data }) => {
     if (scanningPaused) return;
 
     setScanningPaused(true);
 
-    setScanResult(data);
-    if (timerId) {
-      clearTimeout(timerId);
-    }
+      setScanResult(data);
+      if (timerId) {
+        clearTimeout(timerId);
+      }
 
-    setShowErrorMessage(false);
+      setShowErrorMessage(false);
+      setShowSuccessMessage(false);
 
-    setShowSuccessMessage(false);
-
-    try {
-      const response = await axios.post(
-        url,
-        {
-          lectura: data,
-          idTerminal: terminalId,
-        },
-        {
-          headers: {
-            APIToken: apiToken,
-            "Content-Type": "application/json",
+      try {
+        const response = await axios.post(
+          url,
+          {
+            lectura: data,
+            idTerminal: terminalId,
           },
-        }
-      );
-
-      if (response.data.finalizado === false) {
-        setOpciones(response.data.opciones);
-        setNombre(response.data.nombre);
-        setMostrarOpciones(true);
-      } else {
-        setScanningPaused(true);
-        console.log("Éxito", "Fichaje completado con éxito.");
-        setShowSuccessMessage(true);
-      }
-    } catch (error) {
-      if (!error.response) {
-        setErrorMessage("No hay conexión a Internet.");
-      } else {
-        setErrorMessage(
-          `Error: ${error.response.data.message || error.message}`
+          {
+            headers: {
+              APIToken: apiToken,
+              "Content-Type": "application/json",
+            },
+          }
         );
+
+        if (response.data.finalizado === false) {
+          setOpciones(response.data.opciones);
+          setNombre(response.data.nombre);
+          setMostrarOpciones(true);
+        } else {
+          console.log("Éxito", "Fichaje completado con éxito.");
+          setShowSuccessMessage(true);
+        }
+      } catch (error) {
+        if (!error.response) {
+          setErrorMessage("No hay conexión a Internet.");
+        } else {
+          setErrorMessage(
+            `Error: ${error.response.data.message || error.message}`
+          );
+        }
+        console.log(`Error", "Ocurrió un error al fichar. ${error.message}`);
+        console.error("Error data:", error.response?.data);
+        console.error("Error status:", error.response?.status);
+        console.error("Error headers:", error.response?.headers);
+        setShowErrorMessage(true);
+      } finally {
+        setScanningPaused(false); 
       }
-      console.log(`Error", "Ocurrió un error al fichar. ${error.message}`);
-      console.error("Error data:", error.response?.data);
-      console.error("Error status:", error.response?.status);
-      console.error("Error headers:", error.response?.headers);
-      setShowErrorMessage(true);
-    } finally {
-      setScanningPaused(true);
-    }
+    
   };
 
   const handleOptionPress = async (opcion) => {
